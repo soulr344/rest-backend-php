@@ -1,0 +1,8 @@
+Options All -Indexes
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ handler.php [R=200,L]
+
+RewriteRule ^(.*)$ handler.php [QSA,NC,L]
