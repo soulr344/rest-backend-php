@@ -1,4 +1,6 @@
-Options All -Indexes
+# Copyright 2023 - soulr344@github
+# Licensed under GNU GPL v2
+# Please DON'T edit this file if you're not sure what you're doing!
 
 RewriteEngine on
 

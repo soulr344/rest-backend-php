@@ -2,6 +2,7 @@
 
 /**
  * This is an example database model configuration.
+ * @extends parent<DB>
  */
 
 class SampleModel extends DB
@@ -14,4 +15,8 @@ class SampleModel extends DB
       "email" => "string",
     ));
   }
+
+  /**
+   * Custom methods can be placed here.
+   */
 }
