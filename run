@@ -1,0 +1,127 @@
+#!/usr/bin/env php
+<?php
+
+$version = "0.1-alpha";
+$colors = [];
+$colors["default"] = "\033[39m";
+$colors["magenta"] = "\033[96m";
+
+class Run
+{
+  function __construct()
+  {
+    $this->parseEnv();
+    $this->printBanner();
+  }
+
+  private static function parseEnv()
+  {
+    $arr = [];
+    $data = file_get_contents(".env");
+    $data = explode("\n", $data);
+    foreach ($data as $line) {
+      $temp = explode("=", $line);
+      $arr[$temp[0]] = $temp[1];
+    }
+    define("DOTENV", $arr);
+  }
+
+
+
+  private function printBanner()
+  {
+    global $colors, $version;
+    $this->clearScr();
+    echo "{$colors["magenta"]}
+█████ █████ █████ ████  █   █ ████  
+  █   █       █   █   █ █   █ █   █ 
+  █   ████    █   ████  █████ ████  
+█ █   █       █   █     █   █ █     
+███   █████   █   █     █   █ █     
+\n" . $colors["default"];
+    echo "Version: $version\n";
+  }
+
+  private function printHelp()
+  {
+    echo "
+Available Commands:
+    dev\t- Run the dev server
+
+Github Repo: https://tinyit.co/JetPHP
+";
+  }
+
+  function parseArgs()
+  {
+    global $argv;
+    if (count($argv) == 1) {
+      $this->printHelp();
+    } else if ($argv[1] === "dev") {
+      $this->run_dev();
+    } else {
+      $this->printHelp();
+    }
+  }
+
+  private function clearScr()
+  {
+    $os = $this->getOS();
+    switch ($os) {
+      case "windows":
+        system("cls");
+      default:
+        system("clear");
+    }
+  }
+
+  private function getOS() : string
+  {
+    $os = php_uname("s");
+    if (stripos($os, "linux") !== false) {
+      return "linux";
+    } else if (stripos($os, "darwin") !== false) {
+      return "mac";
+    } else if (stripos($os, "mingw") !== false) {
+      return "windows";
+    }
+    return $os;
+  }
+
+  private function run_dev()
+  {
+    $PORT = isset(DOTENV["DEV_PORT"]) ? DOTENV["DEV_PORT"] : 8080;
+
+    echo "\nStarting server on port: $PORT\n\n";
+
+    echo "Server started at http://127.0.0.1:{$PORT}\n";
+    echo "Network IP: http://{$this->getLocalIP()}:{$PORT}\n";
+
+    echo "\nPress Ctrl+C to exit.\n";
+    
+    passthru(PHP_BINARY . " -S 0.0.0.0:$PORT handler.php 2> /dev/null");
+  }
+
+  private function readchar($prompt)
+  {
+      readline_callback_handler_install($prompt, function() {});
+      $char = stream_get_contents(STDIN, 1);
+      readline_callback_handler_remove();
+      return $char;
+  }
+  
+
+  private function getLocalIP()
+  {
+    $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+    socket_connect($sock, "8.8.8.8", 53);
+    socket_getsockname($sock, $name);
+
+    $localAddr = $name;
+
+    return $localAddr;
+  }
+}
+
+$run = new Run();
+$run->parseArgs();
