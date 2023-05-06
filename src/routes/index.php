@@ -1,1 +1,7 @@
-It's working!
+<?php
+
+$frontend = true;
+
+?>
+
+Hello from frontend!
