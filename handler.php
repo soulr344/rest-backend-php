@@ -38,14 +38,9 @@ function parseRoutes()
     sendResponseJson(404, array("success" => false, "message" => "Not Found."));
   }
 
-  $frontend = false;
-
   ob_start();
   require($controller);
-  if ($frontend)
-    return;
-  else
-    ob_end_clean();
+  ob_end_clean();
 
   if (function_exists($_SERVER["REQUEST_METHOD"])) {
     $_SERVER["REQUEST_METHOD"]();
