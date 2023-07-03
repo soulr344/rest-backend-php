@@ -101,9 +101,8 @@ class DB
       $temp = "";
       if ($this->columns[$column] === "json") {
         $value = json_encode($value);
-      }
-
-      if ($this->columns[$column] === "number") {
+        $temp = "'{$value}'";
+      } else if ($this->columns[$column] === "number") {
         $temp = $this->escape_string($value);
       } else {
         $temp = "'{$this->escape_string($value)}'";
