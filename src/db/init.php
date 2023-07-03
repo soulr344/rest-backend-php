@@ -215,7 +215,7 @@ class DB
     }
 
     // append all other columns as string if column isn't present in the column definition
-    foreach (array_diff(array_keys($row), array_diff($this->columns)) as $columnName) {
+    foreach (array_diff_key($row, $formattedRow) as $columnName => $value) {
       $formattedRow[$columnName] = $row[$columnName];
     }
     return $formattedRow;
